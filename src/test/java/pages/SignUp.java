@@ -22,7 +22,7 @@ public class SignUp extends BasePage {
     private DataFaker faker = new DataFaker();
 
     @FindBy(id = "id_gender1")
-    private WebElement maleTitleRadioBtn;
+    private WebElement maleTitleButton;
 
     @FindBy(id = "customer_firstname")
     private WebElement customerFirstnameInput;
@@ -58,16 +58,14 @@ public class SignUp extends BasePage {
     private WebElement phoneNumberInput;
 
     @FindBy(id = "submitAccount")
-    private WebElement submitFormBtn;
+    private WebElement submitFormButton;
 
     @FindBy(css = "#center_column > .alert li")
     private List<WebElement> alertMessageContent;
 
-    private void fillInRegistrationForm(boolean validForm) {
-        maleTitleRadioBtn.click();
-        if (validForm) {
-            customerFirstnameInput.sendKeys(faker.getFakeFirstname());
-        }
+    private void fillInRegistrationFormWithValidData() {
+        maleTitleButton.click();
+        customerFirstnameInput.sendKeys(faker.getFakeFirstname());
         customerLastnameInput.sendKeys(faker.getFakeLastname());
         passwordInput.sendKeys(faker.getFakePassword());
         new Select(birthdayDaySelect).selectByValue("4");
@@ -81,24 +79,38 @@ public class SignUp extends BasePage {
     }
 
     @Step
-    public Profile submitFormWithValidData() {
-        fillInRegistrationForm(true);
+    public Profile submitRegistrationFormWithValidData() {
+        fillInRegistrationFormWithValidData();
         captureScreenshot();
-        submitFormBtn.click();
+        submitFormButton.click();
         return new Profile();
     }
 
+    private void fillInRegistrationFormWithoutPassword() {
+        maleTitleButton.click();
+        customerFirstnameInput.sendKeys(faker.getFakeFirstname());
+        customerLastnameInput.sendKeys(faker.getFakeLastname());
+        new Select(birthdayDaySelect).selectByValue("4");
+        new Select(birthdayMonthSelect).selectByValue("10");
+        new Select(birthdayYearSelect).selectByValue("1990");
+        addressLineInput.sendKeys(faker.getFakeStreet());
+        cityInput.sendKeys(faker.getFakeCity());
+        new Select(stateSelect).selectByValue("4");
+        zipCodeInput.sendKeys(faker.getFakeZipCode());
+        phoneNumberInput.sendKeys(faker.getFakeMobilePhone());
+    }
+
     @Step
-    public SignUp submitFormWithInvalidData() {
-        fillInRegistrationForm(false);
+    public SignUp submitRegistrationFormWithoutPassword() {
+        fillInRegistrationFormWithoutPassword();
         captureScreenshot();
-        submitFormBtn.click();
+        submitFormButton.click();
         return this;
     }
 
     @Step
-    public void userShouldSeeRegistrationFormAlert() {
-        String EXPECTED_MESSAGE = "firstname is required.";
+    public void userShouldSeeRegistrationFormAlert(String alertMessage) {
+        String EXPECTED_MESSAGE = alertMessage;
         assertThat(getAlertMessageContent(), IsCollectionContaining.hasItem(EXPECTED_MESSAGE));
     }
 
@@ -108,7 +120,6 @@ public class SignUp extends BasePage {
         for (WebElement message : alertMessageContent) {
             alertMessages.add(message.getText());
         }
-        System.out.println(alertMessages);
         return alertMessages;
     }
 

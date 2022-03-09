@@ -11,16 +11,16 @@ public class RegistrationTest extends TestConfig {
         new Home()
                 .openSignInPage()
                 .submitCreateAccountFormWithValidEmail()
-                .submitFormWithValidData()
+                .submitRegistrationFormWithValidData()
                 .userShouldBeSuccessfullyRegistered();
     }
 
     @Test
-    public void registrationWithInvalidDataShouldFail() {
+    public void registrationWithoutPasswordShouldFail() {
         new Home()
                 .openSignInPage()
                 .submitCreateAccountFormWithValidEmail()
-                .submitFormWithInvalidData()
-                .userShouldSeeRegistrationFormAlert();
+                .submitRegistrationFormWithoutPassword()
+                .userShouldSeeRegistrationFormAlert("passwd is required.");
     }
 }

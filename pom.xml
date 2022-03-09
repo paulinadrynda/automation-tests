@@ -19,7 +19,7 @@
         <allure.cmd.download.url>
             https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline
         </allure.cmd.download.url>
-        <allure.results.directory>/allure-results</allure.results.directory>
+        <allure.results.directory>${project.basedir}/allure-results</allure.results.directory>
     </properties>
 
     <dependencies>
@@ -67,7 +67,11 @@
             <version>${allure.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>ru.yandex.qatools.ashot</groupId>
+            <artifactId>ashot</artifactId>
+            <version>1.5.4</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -115,6 +119,7 @@
                     </allureDownloadUrl>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 

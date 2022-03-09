@@ -80,3 +80,4 @@ modules.xml
 
 target/*
 .allure/*
+allure-results/*
